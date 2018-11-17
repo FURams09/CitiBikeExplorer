@@ -9,6 +9,7 @@ Created on Sat Nov 17 12:55:36 2018
 import pandas;
 import requests;
 import os.path;
+import zipfile;
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -60,7 +61,10 @@ for i, col in zips.iterrows():
         tripDataZIP = requests.get(tripCSVURL)
         with open(tripFileName, "wb") as code:
             code.write(tripDataZIP.content);
-#        f = open(tripFileName, "w");
-#        f.write(tripDataZIP);
-#        f.close();
-#    if os.path.isfile(tripFileDir & col["Name"])
+    
+    zf = zipfile.ZipFile(tripFileName);
+    for f in zipfile.ZipFile.namelist(zf):
+        if os.path.splitext(f)[1] == '.csv':
+            csv = zf.open(f)
+            data = pandas.read_csv(csv);
+            print(data.head(3));
